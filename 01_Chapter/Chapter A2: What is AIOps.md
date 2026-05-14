@@ -230,6 +230,4 @@ When you talk to a customer, you need to **assess their maturity level** first:
 | **Competition**      | Dynatrace, PagerDuty, BigPanda — but none do live SSH/SQL diagnosis |
 | **Target Customer**  | Level 1–2 maturity: have monitoring, need AI-powered diagnosis      |
 
-***
 
-Say **"Next"** when ready! 🚀
