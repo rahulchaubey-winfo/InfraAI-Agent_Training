@@ -493,12 +493,4 @@ Think of InfraAI Agent as a **hospital**:
 
 
 
-We'll go deeper into:
 
-*   Webhook endpoint design — how it accepts any format
-*   Prometheus Alertmanager integration (the primary integration)
-*   How other monitoring tools connect
-*   The React frontend — all 7 pages
-*   Authentication flow (JWT + MFA + SSO)
-
-Say **"Next"** when ready, or **"Go deeper on X"** for any part of this chapter! 🚀
