@@ -1,305 +1,175 @@
-## Chapter C1: Built-in Mode vs Foundry Mode
+## Chapter C1: Built-in Mode vs Foundry Mode (Revised)
 
 ***
 
-###  One Line Summary
+### What Are These Two Modes?
 
-> **Built-in = fast, cheap, single AI call. Foundry = deep, enterprise-grade, 8 sequential agents. The customer's alert complexity decides which mode to use.**
+InfraAI Agent can analyse alerts in **two ways**. Same input, same output — different processing approach.
 
-***
-
-###  What's From Your Data vs My Expansion
-
-| Source              | What                                                                                                                               |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-|  **Your data**     | Both modes exist, Foundry uses Azure AI Foundry, 8 workflow agents + 11 specialists, dual-path email, Built-in uses single AI call |
-|  **My expansion** | Decision framework, cost comparison, customer pitch guidance. All implementable.                                                   |
-
-***
-
-### The Two Modes — Side by Side
-
-    ┌─────────────────────────────────────────────────────────────────────┐
-    │                                                                      │
-    │  BUILT-IN MODE                        FOUNDRY MODE                   │
-    │  ═════════════                        ════════════                   │
-    │                                                                      │
-    │  Alert                                Alert                          │
-    │    ↓                                    ↓                            │
-    │  Master Agent                         Master Agent                   │
-    │  (parse, classify, route)             (parse, classify, route)       │
-    │    ↓                                    ↓                            │
-    │  SSH / MCP collect data               ┌─────────────────────────┐   │
-    │    ↓                                  │ 8 Sequential Agents:     │   │
-    │  Knowledge search                     │                          │   │
-    │  (Jira, KB, RAG)                      │ 1. intake                │   │
-    │    ↓                                  │ 2. knowledge             │   │
-    │  ┌──────────────────┐                 │ 3. triage-master         │   │
-    │  │  SINGLE AI CALL  │                 │ 4. researcher            │   │
-    │  │  All data in one │                 │ 5. collector             │   │
-    │  │  prompt → one    │                 │ 6. solver (11 specs)     │   │
-    │  │  response        │                 │ 7. validation            │   │
-    │  └──────────────────┘                 │ 8. notifier              │   │
-    │    ↓                                  └─────────────────────────┘   │
-    │  JSON output                            ↓                            │
-    │    ↓                                  JSON output                    │
-    │  Email + Dashboard                      ↓                            │
-    │                                       Email + Dashboard              │
-    │                                                                      │
-    │   Speed: 30-60 seconds                Speed: 2-5 minutes         │
-    │   Cost: ~$0.05/alert                  Cost: ~$0.50/alert         │
-    │   AI Calls: 1                         AI Calls: 8-20+            │
-    │   Depth: Good                         Depth: Excellent            │
-    │                                                                      │
-    └─────────────────────────────────────────────────────────────────────┘
+|                | Built-in Mode                                      | Foundry Mode                                          |
+| -------------- | -------------------------------------------------- | ----------------------------------------------------- |
+| **What it is** | Your Python code does everything + 1 AI API call   | Azure AI Foundry orchestrates 8 specialised AI agents |
+| **Speed**      | 30–60 seconds                                      | 2–5 minutes                                           |
+| **Cost/alert** | \~$0.05                                            | \~$0.50                                               |
+| **Depth**      | Good (single-pass analysis)                        | Excellent (multi-pass with validation)                |
+| **Best for**   | Clear, single-domain alerts (disk full, CPU spike) | Complex, multi-system, ambiguous incidents            |
 
 ***
 
-### How Each Mode Processes the Same Alert
+### How Each Mode Works
 
-Let me trace **one alert** through both modes so the difference is crystal clear:
+    BUILT-IN MODE (Simple):
 
-    ALERT: "ORA-01653 tablespace full USERS_DATA on prod-db-01"
+      Alert → Your Code (SSH + SQL + Jira + RAG) → 1 AI Call → Result
+      
+      Your code does 90% of the work.
+      AI just analyses the collected data.
+      Fast. Cheap. Good enough for 80% of alerts.
 
-#### Built-in Mode Flow
 
-    Step 1: Master Agent parses + classifies → oracle_db
-    Step 2: SSH into prod-db-01 → df -h, du -sh
-    Step 3: MCP queries Oracle → dba_data_files, dba_free_space
-    Step 4: Jira search → finds OPS-1234
-    Step 5: RAG search → finds 3 matching chunks
+    FOUNDRY MODE (Advanced):
 
-    Step 6: ONE AI CALL
-      ┌──────────────────────────────────────────────────────┐
-      │ System prompt: "You are an Oracle DBA..."            │
-      │ + Alert metadata                                      │
-      │ + SSH output (df -h results)                          │
-      │ + SQL results (tablespace data)                       │
-      │ + Jira OPS-1234 resolution                            │
-      │ + RAG chunks                                          │
-      │                                                       │
-      │ → AI processes everything at once                     │
-      │ → Returns structured JSON                             │
-      └──────────────────────────────────────────────────────┘
-
-    Step 7: Store analysis + send email + display on dashboard
-
-    Total: ~45 seconds, 1 AI call, ~$0.05
-
-#### Foundry Mode Flow
-
-    Step 1: Master Agent parses + classifies → oracle_db
-
-    Step 2: Pipeline starts — 8 agents, each with a specific job:
-
-      Agent 1: INTAKE
-      ┌──────────────────────────────────────────────┐
-      │ "Normalise the alert. Extract all metadata.  │
-      │  Produce a structured intake report."        │
-      │                                               │
-      │  Output: Clean, structured alert summary     │
-      └──────────────────────┬───────────────────────┘
-                             ↓ (output passed to next agent)
-
-      Agent 2: KNOWLEDGE
-      ┌──────────────────────────────────────────────┐
-      │ "Search Jira, Confluence, SharePoint, RAG.   │
-      │  Find all relevant past incidents and docs." │
-      │                                               │
-      │  Tools: Jira API, SharePointPreviewTool,     │
-      │         Azure AI Search                       │
-      │                                               │
-      │  Output: Knowledge context package            │
-      └──────────────────────┬───────────────────────┘
-                             ↓
-
-      Agent 3: TRIAGE-MASTER
-      ┌──────────────────────────────────────────────┐
-      │ "Assess urgency, blast radius, affected      │
-      │  systems. Re-validate classification.        │
-      │  Assign priority and routing."               │
-      │                                               │
-      │  Output: Triage report (urgency: HIGH,       │
-      │  blast_radius: database + apps,              │
-      │  classification: oracle_db CONFIRMED)        │
-      └──────────────────────┬───────────────────────┘
-                             ↓
-
-      Agent 4: RESEARCHER
-      ┌──────────────────────────────────────────────┐
-      │ "Based on alert + knowledge + triage, plan   │
-      │  what diagnostic data to collect.            │
-      │  Which SSH commands? Which SQL queries?"     │
-      │                                               │
-      │  Output: Diagnostic plan                     │
-      │  (commands to run, queries to execute)       │
-      └──────────────────────┬───────────────────────┘
-                             ↓
-
-      Agent 5: COLLECTOR
-      ┌──────────────────────────────────────────────┐
-      │ "Execute the diagnostic plan. Interpret      │
-      │  raw SSH output and SQL results.             │
-      │  Summarise findings."                        │
-      │                                               │
-      │  Tools: SSH service, MCP/oracledb            │
-      │                                               │
-      │  Output: Interpreted diagnostic data         │
-      └──────────────────────┬───────────────────────┘
-                             ↓
-
-      Agent 6: SOLVER
-      ┌──────────────────────────────────────────────┐
-      │ "Analyse everything. Call specialists if     │
-      │  needed. Produce root cause + fix."          │
-      │                                               │
-      │  Calls: oracle-specialist (from 11 specs)    │
-      │  May also call: linux-specialist if OS data  │
-      │  is relevant                                  │
-      │                                               │
-      │  Output: Full analysis JSON                  │
-      └──────────────────────┬───────────────────────┘
-                             ↓
-
-      Agent 7: VALIDATION
-      ┌──────────────────────────────────────────────┐
-      │ "Review the solver's output. Check for:      │
-      │  - Hallucinations                            │
-      │  - Dangerous commands                        │
-      │  - Missing information                       │
-      │  - Risk level accuracy"                      │
-      │                                               │
-      │  Output: Validated analysis (or send back    │
-      │  to solver for corrections)                  │
-      └──────────────────────┬───────────────────────┘
-                             ↓
-
-      Agent 8: NOTIFIER
-      ┌──────────────────────────────────────────────┐
-      │ "Format the final output. Send email via     │
-      │  Microsoft Graph API (Outlook). Update       │
-      │  dashboard."                                 │
-      │                                               │
-      │  Tools: OpenAPI tool → Graph sendMail        │
-      │  Fallback: SMTP / direct Graph API           │
-      │                                               │
-      │  Output: Email sent + analysis stored        │
-      └──────────────────────────────────────────────┘
-
-    Total: ~3 minutes, 8-20 AI calls, ~$0.50
+      Alert → Your Code (initial) → 8 AI Agents (sequential) → Result
+      
+      Agent 1: intake (normalise alert)
+      Agent 2: knowledge (search Jira, SharePoint)
+      Agent 3: triage-master (assess urgency, re-classify)
+      Agent 4: researcher (plan diagnostics)
+      Agent 5: collector (execute + interpret)
+      Agent 6: solver (root cause + call specialists)
+      Agent 7: validation (check for errors, hallucinations)
+      Agent 8: notifier (send email via Graph API)
+      
+      Deep. Thorough. Enterprise-grade. For critical incidents.
 
 ***
 
-### The Decision Framework — When to Use Which
+### The AI Model Question — "Where Does the AI Sit?"
 
-This is what you tell customers:
+**You are NOT building an AI model. You are CALLING one via API.**
 
-    ┌─────────────────────────────────────────────────────────────────────┐
-    │                                                                      │
-    │  USE BUILT-IN WHEN:                    USE FOUNDRY WHEN:             │
-    │  ══════════════════                    ═════════════════             │
-    │                                                                      │
-    │   Alert is clear & well-classified    Alert is ambiguous/complex │
-    │     (ORA-01653, disk full, CPU spike)     (multi-system, cascading)  │
-    │                                                                      │
-    │   Speed is priority                   Depth is priority          │
-    │     (< 1 min response needed)            (thorough analysis needed)  │
-    │                                                                      │
-    │   Cost-sensitive environment          Enterprise compliance      │
-    │     ($0.05 vs $0.50 per alert)           (validation + audit trail)  │
-    │                                                                      │
-    │   High alert volume                   Lower volume, high impact  │
-    │     (500+ alerts/month)                  (50-100 critical alerts)    │
-    │                                                                      │
-    │   Single-domain alerts                Cross-domain alerts        │
-    │     (just DB, or just OS)                (DB + OS + App together)    │
-    │                                                                      │
-    │   No Azure dependency needed          Already using Azure        │
-    │     (works with any LLM provider)        (AI Foundry + Graph API)   │
-    │                                                                      │
-    └─────────────────────────────────────────────────────────────────────┘
+Think of it like electricity — you don't build a power plant, you plug into the grid.
+
+    Your code (Python/FastAPI) ──── API call ────▶ AI Model (hosted somewhere)
+                                                   Returns analysis as JSON
+
+**Where can "somewhere" be?**
+
+| Option                   | Where AI Sits                 | Data Privacy                              | Best For              |
+| ------------------------ | ----------------------------- | ----------------------------------------- | --------------------- |
+| **Azure OpenAI**         | Customer's Azure subscription |  Private — data never leaves their cloud | Enterprise production |
+| **AWS Bedrock**          | Customer's AWS account        |  Private                                 | AWS-based customers   |
+| **Google Vertex AI**     | Customer's GCP project        |  Private                                 | GCP-based customers   |
+| **OCI GenAI**            | Customer's Oracle Cloud       |  Private                                 | OCI-based customers   |
+| **Self-hosted (Ollama)** | Customer's own GPU server     |  Maximum privacy (air-gapped)            | Military, banking     |
+| **OpenAI Direct**        | OpenAI's public servers       |  Data leaves environment                 | Testing/demos only    |
+
+> **Critical point:** Both modes (Built-in AND Foundry) can use private AI. The mode and the AI hosting are **independent choices**.
 
 ***
 
-### The Hybrid Strategy — Best of Both Worlds
+### Data Privacy — The #1 Customer Concern
 
- *My expansion — fully implementable, recommended for v2.*
+**Management will ask:** *"Does our production data go to a public server?"*
 
-    ┌─────────────────────────────────────────────────────────────────────┐
-    │                     HYBRID STRATEGY                                  │
-    │                                                                      │
-    │  Alert arrives                                                       │
-    │       ↓                                                              │
-    │  Master Agent classifies + assesses complexity                       │
-    │       ↓                                                              │
-    │  ┌─────────────────────────────────────────────┐                    │
-    │  │  SIMPLE ALERT?                               │                    │
-    │  │  (single domain, known error code,           │                    │
-    │  │   clear classification, severity < critical)  │                    │
-    │  └──────────────┬──────────────┬────────────────┘                    │
-    │            YES  │              │  NO                                  │
-    │                 ↓              ↓                                      │
-    │          Built-in Mode    Foundry Mode                               │
-    │          (fast, cheap)    (deep, thorough)                           │
-    │                                                                      │
-    │  Result: 80% of alerts → Built-in (fast)                            │
-    │          20% of alerts → Foundry (deep)                             │
-    │          Best cost/quality balance                                   │
-    │                                                                      │
-    │  Implementation: Add complexity_score to Master Agent                │
-    │  If score < threshold → built-in                                    │
-    │  If score >= threshold → foundry                                    │
-    │                                                                      │
-    └─────────────────────────────────────────────────────────────────────┘
+**Your answer:**
 
-**Is this doable?**  Yes. The Master Agent already classifies alerts. Adding a complexity score is a simple extension — count the number of domains mentioned, check if multiple systems are referenced, assess severity level. A few lines of Python.
+    ┌─── Customer's Cloud (Azure/AWS/GCP) ──────────────────┐
+    │                                                        │
+    │  ┌─── Private Network (VNet) ──────────────────────┐  │
+    │  │                                                  │  │
+    │  │  InfraAI ◀── private endpoint ──▶ Azure OpenAI  │  │
+    │  │  (your app)     (no internet)      (GPT-4.1)    │  │
+    │  │                                                  │  │
+    │  │  PostgreSQL                                      │  │
+    │  │                                                  │  │
+    │  └──────────────────────────────────────────────────┘  │
+    │                                                        │
+    │  NOTHING leaves this boundary.                         │
+    │  Same GPT-4.1 model, just hosted privately.            │
+    │                                                        │
+    └────────────────────────────────────────────────────────┘
+
+**What changes between public and private?** Just the endpoint URL in the config:
+
+*   Public: `https://api.openai.com/v1/...` ← data goes to OpenAI
+*   Private: `https://YOUR-RESOURCE.openai.azure.com/...` ← data stays in your cloud
+
+No code change. Admin changes the URL in the UI. Done.
 
 ***
 
-### Feature Comparison Table
+### When to Use Which Mode
 
-| Feature                       | Built-in                     | Foundry                                    |
-| ----------------------------- | ---------------------------- | ------------------------------------------ |
-| **AI calls per alert**        | 1                            | 8–20+                                      |
-| **Speed**                     | 30–60 seconds                | 2–5 minutes                                |
-| **Cost per alert**            | \~$0.05                      | \~$0.50                                    |
-| **Classification validation** | Single pass (Master Agent)   | Double pass (Master Agent + triage-master) |
-| **Knowledge search**          | Backend code (Jira API, RAG) | Agent with tools (SharePoint, AI Search)   |
-| **Specialist invocation**     |  None (general prompt)      |  11 domain specialists                    |
-| **Validation step**           |  None                       |  Dedicated validation agent               |
-| **Email delivery**            | Direct SMTP / Graph API      | Agent with OpenAPI tool + fallback         |
-| **Multi-system correlation**  |  Limited                   |  Researcher + Solver handle it            |
-| **Hallucination check**       |  Manual (operator reviews)  |  Validation agent reviews                 |
-| **Audit trail depth**         | Alert + analysis stored      | Each agent's output stored                 |
-| **Azure dependency**          |  None (any provider)        |  Requires Azure AI Foundry                |
-| **Configuration**             | AI Provider tab              | Foundry Config page                        |
+    SIMPLE ALERT                         COMPLEX INCIDENT
+    (80% of alerts)                      (20% of alerts)
+         ↓                                    ↓
+    BUILT-IN MODE                        FOUNDRY MODE
+         ↓                                    ↓
+    "Disk full on prod-db-01"            "3 alerts across 2 systems —
+    Single domain, known error code       CPU spike + connection pool
+    → Fast diagnosis in 45 seconds         exhausted + DB listener down"
+                                          Multi-domain, cascading failure
+                                          → Deep analysis in 3 minutes
+
+**Hybrid strategy (v2 recommendation):** System auto-routes simple alerts to Built-in, complex ones to Foundry. Best cost/quality balance.
 
 ***
 
 ### Cost at Scale
 
-| Monthly Alerts | Built-in Cost | Foundry Cost | Hybrid (80/20) Cost |
-| -------------- | ------------- | ------------ | ------------------- |
-| 100            | $5            | $50          | $14                 |
-| 200            | $10           | $100         | $28                 |
-| 500            | $25           | $250         | $70                 |
-| 1,000          | $50           | $500         | $140                |
-| 5,000          | $250          | $2,500       | $700                |
+| Monthly Alerts | Built-in Only | Foundry Only | Hybrid (80/20) |
+| -------------- | ------------- | ------------ | -------------- |
+| 200            | $10           | $100         | $28            |
+| 500            | $25           | $250         | $70            |
+| 1,000          | $50           | $500         | $140           |
 
-> **At every volume, hybrid gives the best value.** Critical/complex alerts get deep analysis. Simple alerts get fast resolution. Cost stays reasonable.
+All negligible compared to **$90K/year savings** from reduced MTTR.
 
 ***
 
-### How to Explain to Customers
+### Management Q\&A — Anticipated Questions
 
-**Simple pitch:**
+**Q: Do we need to train or build an AI model?**
 
-> *"InfraAI runs in two modes. Built-in mode gives you fast, cost-effective diagnosis for straightforward alerts — like a triage nurse who handles the common cases quickly. Foundry mode activates a team of 8 specialised AI agents for complex incidents — like calling in a team of specialists for a difficult case. You can run both simultaneously, and the system automatically routes alerts to the right mode based on complexity."*
+> No. We call existing commercial models (GPT-4.1, Claude, Gemini) via API. Zero ML training, zero GPUs to manage.
 
-**For technical buyers:**
+**Q: Is our production data safe?**
 
-> *"Built-in uses a single LLM call with our specialised prompt engineering. Foundry uses Azure AI Foundry's multi-agent orchestration — 8 sequential agents, each with specific tools and responsibilities, including a validation agent that catches hallucinations before delivery. Think of it as the difference between a senior engineer working alone versus a cross-functional incident response team."*
+> Yes. We deploy the AI model inside the customer's own cloud subscription (Azure OpenAI / AWS Bedrock). Data never touches the public internet. Private endpoints within the VNet.
 
+**Q: Why two modes? Can't we just pick one?**
+
+> Built-in is fast and cheap — handles 80% of alerts. Foundry is deep and thorough — handles the complex 20%. Together, they give the best cost-to-quality ratio. Customers can start with Built-in and add Foundry when needed.
+
+**Q: Do we depend on OpenAI?**
+
+> No. InfraAI supports 4+ providers (OpenAI, Anthropic, Google, Azure). Switching is a UI config change. No vendor lock-in.
+
+**Q: What's our competitive advantage if we're using the same AI as everyone else?**
+
+> The AI model is commodity. Our advantage is the **data collection pipeline** — SSH into servers, AI-generated SQL queries, Jira/SharePoint/ServiceNow knowledge search, RAG. No competitor collects real infrastructure data and feeds it to the AI. We give the AI **better data**, so it gives **better answers**.
+
+**Q: What if the customer wants zero cloud dependency?**
+
+> We support self-hosted open-source models (Llama 3, Mistral) running on the customer's own GPU hardware. Works in air-gapped environments. Model quality is slightly lower, but zero data leaves their premises.
+
+**Q: What's the investment needed?**
+
+> For Built-in mode: just an API key from Azure OpenAI (\~$10-50/month for typical usage). For Foundry mode: Azure AI Foundry setup (\~1-2 hours) + same per-token cost. No hardware investment. No ML team needed.
+
+***
+
+### Summary — C1 in 30 Seconds
+
+    1. Two modes: Built-in (fast, cheap) vs Foundry (deep, enterprise)
+    2. You DON'T build AI — you CALL existing models via API
+    3. Data privacy solved: Deploy AI inside customer's own cloud
+    4. Both modes work with private AI — independent choices
+    5. Recommend hybrid: Built-in for simple, Foundry for complex
+    6. Competitive advantage = data pipeline, not the AI model
+
+***
 
 
 Say **"Next"** when ready! 🚀
