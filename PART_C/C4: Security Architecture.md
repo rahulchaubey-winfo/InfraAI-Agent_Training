@@ -307,7 +307,7 @@ These are plug-and-play. Enable on your AI deployment, configure the policies, a
 
 ***
 
-### How to Position With Management
+### Customer Positioning
 
 **When someone asks "What about security?"**
 
@@ -323,7 +323,7 @@ These are plug-and-play. Enable on your AI deployment, configure the policies, a
 
 ***
 
-### Management Q\&A
+### Q\&A
 
 **Q: What are guardrails?**
 Guardrails are safety controls specific to AI applications. They prevent the AI from giving wrong answers, suggesting dangerous actions, leaking sensitive data, going off-topic, or running up unexpected costs. Traditional security protects the system from users. Guardrails protect users from AI misbehaviour.
