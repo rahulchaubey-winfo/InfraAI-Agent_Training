@@ -437,6 +437,3 @@ Configurable per source. Each source has a sync interval (e.g., every 6 hours, e
     9. Privacy: PII redacted before embedding, all data in customer's cloud
 
 
-The complete security story — network, identity, data, and application layers. Same concise, professional format.
-
-Say "Next" when ready.
