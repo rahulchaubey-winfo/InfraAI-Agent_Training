@@ -1,9 +1,13 @@
 # Foundations: What an AI Agent Is, and Why We Built One
 
 **Document 01 of the InfraAI Agent technical series**
+
 **Programme:** WinfoCloudX / CloudXPulse
+
 **Author:** Rahul Chaubey, Director, WinfoCloudX
+
 **Status:** Baseline. Revised as the platform evolves.
+
 
 ---
 
