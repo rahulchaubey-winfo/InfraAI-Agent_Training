@@ -194,7 +194,7 @@ All three present             →  agent
 
 | | Runbook | AI Agent |
 |---|---|---|
-| Handles what nobody predicted | ❌ | ✅ |
+| Handles what nobody predicted | NO | Yes |
 | Goes out of date | Always | No |
 | Must be *found* at 2am | ❌ Yes | ✅ No |
 | Available instantly | Only if someone finds it | Always |
@@ -262,45 +262,6 @@ limitation.
 
 ---
 
-## 1.12 Check Yourself
-
-Answer in your own words before moving to Lesson 2. Do not scroll back up.
-
-1. In your own words, what is the difference between a script and an agent?
-2. What is the only thing an LLM can actually do?
-3. If an LLM cannot execute anything, how does the agent SSH into a server?
-4. Name the three ingredients of an AI agent.
-5. A customer asks: *"Why not just use ChatGPT? Why pay you?"* — What do you say?
-6. What is the single biggest weakness of an AI agent, and how does this product handle it?
-
-<details>
-<summary><strong>Model answers — open only after attempting</strong></summary>
-
-**1.** A script follows instructions written in advance. An agent is given a goal and works out the
-instructions itself, choosing each next step based on what the previous step returned.
-
-**2.** Produce text. Given some text, it predicts sensible text that would follow. That is the
-entire mechanism.
-
-**3.** It does not. Ordinary Python code performs the SSH. The LLM only produces text saying what it
-wants run; `tool_registry.py` dispatches to `ssh_service.py`, which does the real work and feeds the
-real output back.
-
-**4.** A brain (the LLM), hands (code that can actually act), and a goal with the freedom to choose
-its own steps.
-
-**5.** *"ChatGPT has never seen your server and never will. It will guess — confidently, and often
-wrongly. Our agent connects to your actual infrastructure, runs real diagnostic commands, reads
-your Jira and your runbooks, and reasons about the real output. The difference is guessing versus
-knowing."*
-
-**6.** It can be confidently wrong and does not know it. The product handles this with three
-controls: a confidence score on every analysis, risk labels on every command, and mandatory human
-approval before anything dangerous executes.
-
-</details>
-
----
 
 ## Next
 
