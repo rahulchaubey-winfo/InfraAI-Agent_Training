@@ -115,8 +115,8 @@ Hold that distinction. It matters enormously when we reach safety in Volume 3.
 
 ## 1.5 The Limitation That Is the Whole Reason This Product Exists
 
-> # An LLM cannot DO anything.
-> # It can only produce text.
+> ### An LLM cannot DO anything.
+> ### It can only produce text.
 
 It cannot SSH. It cannot query a database. It cannot read a file. It cannot call an API.
 
@@ -164,7 +164,7 @@ Because of that separation, you can sit in a bank's security review and say — 
 
 This is genuinely true of the product. It is one of the strongest sentences you own.
 
-> 📌 **Note:** There is important nuance here that we stress-test in Lesson 10. The architecture is
+>  **Note:** There is important nuance here that we stress-test in Lesson 10. The architecture is
 > sound; the current implementation has a gap. Do not over-claim until you have read that lesson.
 
 ---
@@ -185,7 +185,7 @@ Remove the goal and freedom   →  script
 All three present             →  agent
 ```
 
-> 💡 **Use this as a diagnostic.** Someone demos an "AI agent" at a conference? Ask which of the
+>  **Use this as a diagnostic.** Someone demos an "AI agent" at a conference? Ask which of the
 > three it actually has. Most have two.
 
 ---
