@@ -23,6 +23,8 @@ explain any layer to an engineer, an architect or a customer.
 
 ---
 
+<img width="2554" height="1806" alt="alt_image" src="https://github.com/user-attachments/assets/bebf3823-a1d4-4c82-8b84-e4c015bbacc9" />
+
 ## 1. The eight layers
 
 The platform is organised into eight layers. Each one has a single responsibility and passes its
