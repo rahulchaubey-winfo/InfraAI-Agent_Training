@@ -1,11 +1,5 @@
 # 1 — What Is an AI Agent?
 
-> **Course:** InfraAI Agent / CloudXPulse — SME Tutorial
-> **Volume:** 1 — Foundations
-> **Lesson:** 1 of 17
-> **Audience:** Infrastructure, cloud and DevOps practitioners with no prior AI background
-> **Prerequisite:** None. This is lesson one.
-
 ---
 
 ## Table of Contents
