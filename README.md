@@ -1,6 +1,5 @@
 # InfraAI / Platform Agent — MASTER SME PACK
-# InfraAI / Platform Agent — MASTER SME PACK
-## The Complete Ownership Document
+
 
 **Owner:** Rahul Chaubey, Director – WinfoCloudX
 **Programme:** WinfoCloudX (new avatar) → **CloudXPulse** → Infra Agent
@@ -8,17 +7,19 @@
 **Confidence:** Verified against source code. Every claim tagged.
 
 ---
-
 ## HOW TO USE THIS DOCUMENT
 
 Read Part 1 once. **Memorise Part 2.** Practise Part 6 out loud before any customer call.
 Parts 3–5 are reference — consult, don't memorise.
 
-**Tags:**
-- ✅ **VERIFIED** — read in source code or observed live
-- ⚠️ **UNVERIFIED** — documented but not confirmed in code
-- ❌ **FALSE** — documentation says it, code disproves it
-- 🔒 **DO NOT SAY** — untrue or damaging if said today
+
+
+
+<img width="2421" height="1435" alt="alt_image (1)" src="https://github.com/user-attachments/assets/e4d6d5f1-e0f6-4228-8b82-c3bd3d04e817" />
+
+
+
+
 
 ---
 
@@ -179,20 +180,13 @@ validation. (That's a finding, not a feature.)
 | Keywords in text | 70 | disk/CPU/memory → linux · tablespace/datafile → oracle |
 | Hostname patterns | 20 | `db-` → database · `web-`/`app-` → application |
 
-## 3.5 Graceful degradation — lead with this ✅ VERIFIED
+## 3.5 Graceful degradation — lead with this  VERIFIED
 
-```
-SSH ✅ + SQL ✅ + Knowledge ✅ + AI ✅  →  95% confidence
-SSH ❌ + SQL ✅ + Knowledge ✅ + AI ✅  →  70%
-SSH ✅ + SQL ❌ + Knowledge ✅ + AI ✅  →  65%
-SSH ❌ + SQL ❌ + Knowledge ✅ + AI ✅  →  40%
-SSH ❌ + SQL ❌ + Knowledge ❌ + AI ✅  →  20%
-```
 
 > *"The system never fully fails, and it tells you honestly how much it knows. Most vendors hide
 > their failure modes. We display them as a confidence score."*
 
-## 3.6 Tech stack ✅ VERIFIED
+## 3.6 Tech stack  VERIFIED
 
 **Backend:** Python 3.12 · FastAPI async · SQLAlchemy 2.0 · Alembic · asyncssh · python-oracledb ·
 JWT HS256 · bcrypt · Fernet · aiosmtplib · APScheduler · httpx
@@ -201,7 +195,7 @@ JWT HS256 · bcrypt · Fernet · aiosmtplib · APScheduler · httpx
 **Infra:** Docker multi-stage · Kubernetes (AKS/EKS/GKE/OKE) · Kustomize · GitHub Actions
 **Scale:** 19 routers · 17 models · 31 services · 21 migrations
 
-## 3.7 Deployment ✅ VERIFIED
+## 3.7 Deployment  VERIFIED
 
 | Target | Method | Status |
 |---|---|---|
@@ -221,7 +215,7 @@ and ADNOC, lead with this.
 
 # PART 4 — SECURITY: STRONGEST AND WEAKEST GROUND
 
-## 4.1 True today ✅ VERIFIED
+## 4.1 True today  VERIFIED
 
 **PII redaction is real.** `_alert_to_context()` redacts every field before data reaches the solver
 or any specialist.
@@ -272,7 +266,7 @@ make it a slide.**
 | P2-S1 | Tenant-wide `Mail.Send` — SP can send as any Winfo mailbox |
 | P2-S2 | Tenant-wide `Sites.Read.All` — every SharePoint site including HR, Finance, Legal |
 
-✅ **CLOSED:** S4 — the SQL regex has its pipes intact and works correctly.
+ **CLOSED:** S4 — the SQL regex has its pipes intact and works correctly.
 
 ## High — 16
 
