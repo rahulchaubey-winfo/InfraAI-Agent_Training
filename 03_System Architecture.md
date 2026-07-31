@@ -2,11 +2,6 @@
 
 **Document 03 of the InfraAI Agent technical series**
 
-**Programme:** WinfoCloudX / CloudXPulse
-
-**Author:** Rahul Chaubey, Director, WinfoCloudX
-
-**Status:** Baseline. Revised as the platform evolves.
 
 ---
 
