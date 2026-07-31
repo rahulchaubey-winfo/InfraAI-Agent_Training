@@ -146,6 +146,9 @@ incomplete.
 
 ---
 
+<img width="2647" height="1926" alt="alt_image (1)" src="https://github.com/user-attachments/assets/18c8b7c3-c4bb-4724-811f-bfb3a7dd153e" />
+
+
 ## 5. Findings: control gaps
 
 Three findings concern the control model directly. All three are implementation gaps with
