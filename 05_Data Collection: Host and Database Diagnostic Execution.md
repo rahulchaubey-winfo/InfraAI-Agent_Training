@@ -2,10 +2,6 @@
 
 **Document 05 of the InfraAI Agent technical series**
 
-**Programme:** WinfoCloudX / CloudXPulse
-
-**Status:** Baseline. Revised as the platform evolves.
-
 ---
 
 ## Purpose of this document
