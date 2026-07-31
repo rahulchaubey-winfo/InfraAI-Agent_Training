@@ -2,9 +2,7 @@
 
 
 **Owner:** Rahul Chaubey, Director – WinfoCloudX
-**Programme:** WinfoCloudX (new avatar) → **CloudXPulse** → Infra Agent
-**Date:** 30 July 2026
-**Confidence:** Verified against source code. Every claim tagged.
+
 
 ---
 ## HOW TO USE THIS DOCUMENT
