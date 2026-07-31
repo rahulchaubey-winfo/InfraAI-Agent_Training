@@ -105,9 +105,9 @@ anyone demanding fully autonomous zero-human remediation.
 
 **Saying the disqualifiers out loud builds more credibility than any feature list.**
 
-## 2.7 The ROI formula — never the fixed number
+## 2.7 The ROI formula  never the fixed number
 
-🔒 **DO NOT SAY** *"\$90,000 per year."* It back-solves to \$50/hour fully-loaded engineer cost.
+ **DO NOT SAY** *"\$90,000 per year."* It back-solves to \$50/hour fully-loaded engineer cost.
 A customer who knows your offshore rates — USD 20,000 for a 3-person team over 8 weeks — will do
 that arithmetic in the room.
 
