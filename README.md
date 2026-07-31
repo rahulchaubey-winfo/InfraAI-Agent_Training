@@ -116,7 +116,7 @@ that arithmetic in the room.
 > multiply by your blended engineering rate. That's the number we're attacking. What are those three
 > numbers for you?"*
 
-**LLM cost you CAN quote:** ✅ Built-in ~\$0.03–0.10/alert · Foundry ~\$0.25–0.80/alert ·
+**LLM cost you CAN quote:**  Built-in ~\$0.03–0.10/alert · Foundry ~\$0.25–0.80/alert ·
 200 alerts/month = \$10–160/month.
 
 ---
@@ -141,7 +141,7 @@ Security cameras = monitoring · Reception = webhook · **Triage nurse = Master 
 Lab technician = SSH/SQL · Medical records = Jira/KB/RAG · **Doctor = the LLM** ·
 Prescription = fix commands · Patient file = PostgreSQL
 
-## 3.2 Two operating modes ✅ VERIFIED
+## 3.2 Two operating modes  VERIFIED
 
 | | Built-in | Foundry |
 |---|---|---|
@@ -151,7 +151,7 @@ Prescription = fix commands · Patient file = PostgreSQL
 | Needs | Any LLM provider | Azure AI Foundry |
 | Use when | Volume, cost sensitivity | Complexity, enterprise compliance |
 
-## 3.3 The Foundry pipeline — two lines, not one ✅ VERIFIED
+## 3.3 The Foundry pipeline — two lines, not one  VERIFIED
 
 ```
 LINE 1 — WORKFLOW (sequential, every alert)
@@ -169,7 +169,7 @@ LINE 2 — TECHNOLOGY SPECIALISTS (invoked BY the solver)
 **Mandatory: intake, triage_master, researcher, solver.** Everything else optional — including
 validation. (That's a finding, not a feature.)
 
-## 3.4 Classification — four weighted signals ✅ VERIFIED
+## 3.4 Classification — four weighted signals  VERIFIED
 
 | Signal | Weight | Examples |
 |---|---|---|
@@ -229,7 +229,7 @@ make it a slide.**
 
 **Real approval workflow.** Risk-tiered, 24-hour TTL, RBAC-gated, double-approval guard.
 
-## 4.2 🔒 DO NOT SAY
+## 4.2  DO NOT SAY
 
 | Claim | Why it's false |
 |---|---|
@@ -346,14 +346,14 @@ component.
 
 | Module | Status | What it does |
 |---|---|---|
-| **Infra Agent** | ✅ Live | Incident detection, diagnosis, remediation |
-| **Health Checks** | ✅ Live | Continuous posture scoring |
-| **Cost Analysis** | ✅ Live | FinOps — spend, anomalies, savings |
-| **Agent Runs** | ✅ Live | Execution history and audit |
-| **AskMe** | ✅ Live | Conversational interface |
-| **Platforms** | ✅ Live | Multi-estate registry — multi-tenancy foundation |
-| *Ask EBS* | ✅ Live (separate) | Conversational ERP access |
-| *Databricks Genie triage* | 🔶 In flight | Unmerged branch, unowned |
+| **Infra Agent** |  Live | Incident detection, diagnosis, remediation |
+| **Health Checks** |  Live | Continuous posture scoring |
+| **Cost Analysis** |  Live | FinOps — spend, anomalies, savings |
+| **Agent Runs** |  Live | Execution history and audit |
+| **AskMe** |  Live | Conversational interface |
+| **Platforms** |  Live | Multi-estate registry — multi-tenancy foundation |
+| *Ask EBS* |  Live (separate) | Conversational ERP access |
+| *Databricks Genie triage* |  In flight | Unmerged branch, unowned |
 
 **The one-liner:**
 > *"CloudXPulse is the AI operations platform for enterprise cloud estates. It watches, diagnoses,
@@ -367,9 +367,9 @@ component.
 
 | Model | Readiness | Blocker |
 |---|---|---|
-| **1. Internal force multiplier** | ✅ **Ready now** | None. Run inside your own MSP delivery — ADNOC, ElectroRent, Enviri |
-| **2. Deployed per customer** | ⚠️ ~2 weeks | Tier 0 + Tier 1 security fixes. OKE overlay is the Oracle path |
-| **3. Multi-tenant SaaS** | ❌ 2–3 months | MCP fan-out bug + no tenant isolation |
+| **1. Internal force multiplier** |  **Ready now** | None. Run inside your own MSP delivery — ADNOC, ElectroRent, Enviri |
+| **2. Deployed per customer** |  ~2 weeks | Tier 0 + Tier 1 security fixes. OKE overlay is the Oracle path |
+| **3. Multi-tenant SaaS** |  2–3 months | MCP fan-out bug + no tenant isolation |
 
 **Model 1 funds Model 2. Model 2 proves Model 3. Never lead with SaaS.**
 
@@ -407,7 +407,7 @@ cd frontend && npm install && npm run dev
 Actions → *Deploy InfraAI Agent to Azure* → `component: apps` → fill resource names → Run.
 Or push to `backend/**` / `frontend/**` on `main` for auto-deploy.
 
-## Roll back — ⚠️ no supported mechanism
+## Roll back —  no supported mechanism
 
 ```bash
 az webapp config container set -g infraai-rg -n infraai-backend \
